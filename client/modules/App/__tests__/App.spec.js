@@ -6,7 +6,7 @@ import { App } from '../App';
 import styles from '../App.css';
 import { intlShape } from 'react-intl';
 import { intl } from '../../../util/react-intl-test-helper';
-import { signOut } from '../AppActions';
+import { toggleAddPost } from '../AppActions';
 
 const intlProp = { ...intl, enabledLanguages: ['en', 'fr'] };
 const children = <h1>Test</h1>;
@@ -21,6 +21,12 @@ test('renders properly', t => {
   const wrapper = shallow(
     <App {...props} />
   );
+
+  t.is(wrapper.find('Header').length, 1);
+  t.is(wrapper.find('Footer').length, 1);
+  t.is(wrapper.find('Header').prop('toggleAddPost'), wrapper.instance().toggleAddPostSection);
+  t.truthy(wrapper.find('Header + div').hasClass(styles.container));
+  t.truthy(wrapper.find('Header + div').children(), children);
 });
 
 test('calls componentDidMount', t => {
@@ -52,12 +58,12 @@ test('calls componentDidMount', t => {
   App.prototype.componentDidMount.restore();
 });
 
-test('calling signOut dispatches signOut', t => {
+test('calling toggleAddPostSection dispatches toggleAddPostSection', t => {
   const wrapper = shallow(
     <App {...props} />
   );
 
-  wrapper.instance().signOut();
+  wrapper.instance().toggleAddPostSection();
   t.truthy(dispatch.calledOnce);
-  t.truthy(dispatch.calledWith(signOut()));
+  t.truthy(dispatch.calledWith(toggleAddPost()));
 });
